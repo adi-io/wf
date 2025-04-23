@@ -57,7 +57,7 @@ def process_properties_file(file_path, max_chunk_size=5000, max_workers=5):
     return combined_response
 
 file_path = "d.properties"
-result = process_properties_file(file_path, max_workers=5)
+result = process_properties_file(file_path, max_workers=500)
 
 with open('new.properties', 'w', encoding='utf-8') as outfile:
     outfile.write(result)
