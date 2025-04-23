@@ -12,7 +12,7 @@ def process_chunk(chunk):
 
     result = response.text
     if result is not None:
-        result.replace("```html\n", "").replace("```\n", "").replace("```", "")
+        result = result.replace("```html\n", "").replace("```\n", "").replace("```", "")
     return (result)
 
 def process_properties_file(file_path, max_chunk_size=5000, max_workers=5):
@@ -58,4 +58,6 @@ def process_properties_file(file_path, max_chunk_size=5000, max_workers=5):
 
 file_path = "d.properties"
 result = process_properties_file(file_path, max_workers=5)
-print(result)
+
+with open('new.properties', 'w', encoding='utf-8') as outfile:
+    outfile.write(result)
