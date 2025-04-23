@@ -6,7 +6,7 @@ from google.genai import types
 def process_text_with_ai(text):
 
     client = genai.Client(
-        vertexai=True, project="development-gui", location="europe-central2",
+        vertexai=True, project="so-concrete", location="global",
     )
     chat = client.chats.create(model="gemini-2.0-flash")
     response = chat.send_message("Please translate the English text to Dutch and only respond back with the translated string. If there is no English text to translate, just send back the original text. NOTHING ELSE. No additional explanations, questions, or commentary. Only respond with the translated text." + str(text))
