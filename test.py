@@ -39,10 +39,8 @@ def process_properties_file(file_path, max_chunk_size=5000, max_workers=5):
 
     # Process chunks in parallel
     with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
-        # Submit all tasks and collect future objects
         future_to_chunk = {executor.submit(process_chunk, chunk): i for i, chunk in enumerate(chunks)}
 
-        # Collect results in order
         responses = [None] * len(chunks)
         for future in concurrent.futures.as_completed(future_to_chunk):
             index = future_to_chunk[future]
@@ -52,7 +50,6 @@ def process_properties_file(file_path, max_chunk_size=5000, max_workers=5):
                 print(f'Chunk {index} generated an exception: {exc}')
                 responses[index] = chunks[index]  # Fall back to original content
 
-    # Combine responses
     combined_response = "\n".join(responses)
     return combined_response
 
