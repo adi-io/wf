@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { InputFile } from "@/components/ui/upload";
 import { InputForm } from "@/components/ui/upload2";
 

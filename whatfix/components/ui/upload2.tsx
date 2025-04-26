@@ -4,7 +4,8 @@ import { InputFile } from "@/components/ui/upload";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
+import { useRef, useState } from "react";
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -15,7 +16,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 
 const FormSchema = z.object({
   code: z.string().min(2, {
@@ -27,6 +27,8 @@ const FormSchema = z.object({
 });
 
 export function InputForm() {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -35,15 +37,38 @@ export function InputForm() {
     },
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    const fileInput = document.getElementById(
+      "master_file",
+    ) as HTMLInputElement;
+    const file = fileInput?.files?.[0];
+
+    //add the file check reponse later
+
+    setIsSubmitted(true);
+
+    try {
+      const formData = new FormData();
+      if (file) {
+        formData.append("file", file);
+      }
+      formData.append("code", data.code);
+      formData.append("password", data.password);
+
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error(`Upload failed: ${response.statusText}`);
+      }
+      const result = await response.json();
+    } catch (error) {
+      console.error("Upload error: ", error);
+    } finally {
+      setIsSubmitted(false);
+    }
   }
 
   return (
@@ -51,7 +76,7 @@ export function InputForm() {
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
         <FormField
           control={form.control}
-          name="language_code"
+          name="code"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Language Code</FormLabel>
