@@ -84,7 +84,7 @@ def language_code_to_name(language_code):
 
     return language_map.get(language_code, "English")
 
-def process_properties_file(file_path, language_code, fastmode, max_workers=50):
+def process_properties_file(file_path, language_code, fastmode, max_workers=50000):
     language = language_code_to_name(language_code)
     with open(file_path, 'r') as file:
         lines = file.readlines()

@@ -20,19 +20,23 @@ app.add_middleware(
 async def convert_properties(
     file: UploadFile = File(...),
     code: str = Form(...),
-    password: str = Form(...)
+    password: str = Form(...),
+    fastmode: str = Form(...)
 ):
     if not file.filename:
         raise HTTPException(status_code=400, detail="No file was uploded")
     if password != "whatfix123":
         raise HTTPException(status_code=401, detail="Wrong password, please try again")
-
+    if file.fastmode == 'false':
+        bool_v = False
+    else:
+        bool_v = True
     temp_dir = tempfile.gettempdir()
     temp_zip_path = os.path.join(temp_dir, file.filename)
     with open(temp_zip_path, "wb") as buffer:
         buffer.write(await file.read())
 
-    return (handle_and_process_file(temp_zip_path, code, fastmode=False))
+    return (handle_and_process_file(temp_zip_path, code, bool_v))
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
