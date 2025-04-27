@@ -33,6 +33,8 @@ def process_chunk(chunk, language):
     if chunk.strip() == "":
         return (chunk)
 
+    print(f"processing initiated for {chunk}")
+
     client = genai.Client(
         vertexai=True, project="so-concrete", location="global",
     )
@@ -41,6 +43,7 @@ def process_chunk(chunk, language):
     response = chat.send_message(f"You are given a part of a file which needs some processing. Your task is to convert the English text within the HTML code to {language}. Please translate ONLY the English text content that appears between HTML tags, while preserving all HTML code exactly as it is. Return only the complete HTML with translated text content. If there is no English text to translate, just send back the original text unchanged. NOTHING ELSE. No additional explanations, questions, or commentary. Only respond with the HTML containing the translated text. Do not change any HTML tags or attributes - only translate the content text. {chunk}")
 
     result = response.text
+    print(result)
     if result is not None:
         result = result.replace("```html\n", "").replace("```\n", "").replace("```", "")
     return (result)
