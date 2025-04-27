@@ -84,10 +84,10 @@ def language_code_to_name(language_code):
         'HE': 'Hebrew',
         'FA': 'Persian'
     }
+    normalized_code = language_code.upper()
+    return language_map.get(normalized_code, "English")
 
-    return language_map.get(language_code, "English")
-
-def process_properties_file(file_path, language_code, fastmode, max_workers=5000):
+def process_properties_file(file_path, language_code, fastmode, max_workers=100):
     language = language_code_to_name(language_code)
     with open(file_path, 'r') as file:
         lines = file.readlines()
@@ -128,7 +128,7 @@ def process_properties_file(file_path, language_code, fastmode, max_workers=5000
 def handle_and_process_file(zip_file_path, language_code, fastmode):
     try:
         language_file_path = extract_full_language_file(zip_file_path)
-        result = process_properties_file(language_file_path, language_code,fastmode, max_workers=5000)
+        result = process_properties_file(language_file_path, language_code,fastmode, max_workers=100)
         temp_dir = tempfile.gettempdir()
         temp_file_path = os.path.join(temp_dir, f'{language_code}.properties')
         with open(temp_file_path, 'w', encoding='utf-8') as outfile:
@@ -136,7 +136,7 @@ def handle_and_process_file(zip_file_path, language_code, fastmode):
 
         return FileResponse(
             path= temp_file_path,
-            filename=f'{language_code}.properties',
+            filename=f'{language_code.lower()}.properties',
             media_type="text/plain",
             background=background_task_after_response(temp_file_path, zip_file_path, language_file_path)
         )
