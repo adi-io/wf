@@ -97,13 +97,9 @@ def process_properties_file(file_path, language_code, fastmode, max_workers=50):
 
     if fastmode is True:
         for line in lines:
-            if line.strip() == "#default Properties":
-                line = line.replace("default", language_code.lower())
-            chunks.append(line)
+           chunks.append(line)
     else:
         for line in lines:
-            if line.strip() == "#default Properties":
-                line = line.replace("default", language_code.lower())
             if (line.strip() == "") and current_chunk:
                 chunks.append("".join(current_chunk))
                 current_chunk = []
@@ -127,7 +123,9 @@ def process_properties_file(file_path, language_code, fastmode, max_workers=50):
                 responses[index] = chunks[index]  # Fall back to original content
 
     combined_response = "\n".join(responses)
-    return combined_response
+
+    modified_response = combined_response.replace("#default Properties", f"#{language_code.lower()} Properties", 1)
+    return modified_response
 
 def handle_and_process_file(zip_file_path, language_code, fastmode):
     try:
