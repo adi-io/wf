@@ -87,7 +87,7 @@ def language_code_to_name(language_code):
     normalized_code = language_code.upper()
     return language_map.get(normalized_code, "English")
 
-def process_properties_file(file_path, language_code, fastmode, max_workers=100):
+def process_properties_file(file_path, language_code, fastmode, max_workers=50):
     language = language_code_to_name(language_code)
     with open(file_path, 'r') as file:
         lines = file.readlines()
@@ -132,7 +132,7 @@ def process_properties_file(file_path, language_code, fastmode, max_workers=100)
 def handle_and_process_file(zip_file_path, language_code, fastmode):
     try:
         language_file_path = extract_full_language_file(zip_file_path)
-        result = process_properties_file(language_file_path, language_code,fastmode, max_workers=100)
+        result = process_properties_file(language_file_path, language_code,fastmode, max_workers=50)
         temp_dir = tempfile.gettempdir()
         temp_file_path = os.path.join(temp_dir, f'{language_code}.properties')
         with open(temp_file_path, 'w', encoding='utf-8') as outfile:
