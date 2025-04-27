@@ -27,7 +27,7 @@ async def convert_properties(
         raise HTTPException(status_code=400, detail="No file was uploded")
     if password != "whatfix123":
         raise HTTPException(status_code=401, detail="Wrong password, please try again")
-    if file.fastmode == 'false':
+    if fastmode == 'false':
         bool_v = False
     else:
         bool_v = True
