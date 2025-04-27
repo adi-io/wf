@@ -97,9 +97,13 @@ def process_properties_file(file_path, language_code, fastmode, max_workers=100)
 
     if fastmode is True:
         for line in lines:
+            if line.strip() == "#default Properties":
+                line = line.replace("default", language_code.lower())
             chunks.append(line)
     else:
         for line in lines:
+            if line.strip() == "#default Properties":
+                line = line.replace("default", language_code.lower())
             if (line.strip() == "") and current_chunk:
                 chunks.append("".join(current_chunk))
                 current_chunk = []
